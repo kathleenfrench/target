@@ -20,6 +20,12 @@ function create(){
   game.physics.startSystem(Phaser.Physics.ARCADE);
   ball = game.add.sprite(game.world.width * 0.5, game.world.height - 25, 'ball');
   ball.anchor.set(0.5);
+  game.physics.arcade.checkCollision.down = false;
+  ball.checkWorldBounds = true;
+  ball.events.onOutOfBounds.add(function(){
+    alert('Game Over');
+    location.reload();
+  }, this);
   paddle = game.add.sprite(game.world.width * 0.5, game.world.height - 5, 'paddle');
   paddle.anchor.set(0.5, 1);
   game.physics.enable(ball, Phaser.Physics.ARCADE);
