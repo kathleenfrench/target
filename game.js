@@ -8,7 +8,9 @@ var ball,
     paddle,
     bricks,
     newBrick,
-    brickInfo;
+    brickInfo,
+    scoreText,
+    score = 0;
 
 function preload(){
   game.load.image('ball', 'assets/ball.png');
@@ -40,10 +42,12 @@ function create(){
   paddle.body.immovable = true;
 
   initBricks();
+  scoreText = game.add.text(5, 5, 'Score: 0', { font: '18px Arial', fill: '#0095DD'});
 }
 
 function update(){
   game.physics.arcade.collide(ball, paddle);
+  game.physics.arcade.collide(ball, bricks, ballHitBrick);
   paddle.x = game.input.x || game.world.width * 0.5;
 }
 
@@ -75,4 +79,11 @@ function initBricks(){
       bricks.add(newBrick);
     }
   }
+}
+
+
+function ballHitBrick(ball, brick){
+  brick.kill();
+  score += 10;
+  scoreText.setText('Score: ' + score);
 }
