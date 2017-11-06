@@ -50,7 +50,7 @@ function create(){
   paddle.body.immovable = true;
 
   initBricks();
-  textStyle = { font: '18px Arial', fill: '#0095DD'};
+  textStyle = { font: '16px Arial', fill: '#0095DD'};
   scoreText = game.add.text(5, 5, 'Score: 0', textStyle);
   livesText = game.add.text(game.world.width - 5, 5, 'Lives: ' + lives, textStyle);
   livesText.anchor.set(1, 0);
@@ -63,7 +63,7 @@ function create(){
   startButton = game.add.button(game.world.width * 0.5, game.world.height * 0.5, 'button', startGame, this, 1, 0, 2);
   startButton.anchor.set(0.5);
 
-  // pause functionality 
+  // pause functionality
 
   spaceKey = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
   spaceKey.onDown.add(togglePause, this);
