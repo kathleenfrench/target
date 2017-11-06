@@ -111,13 +111,7 @@ function ballHitBrick(ball, brick){
   score += 10;
   scoreText.setText('Score: ' + score);
 
-  var count_alive = 0;
-  for (i = 0; i < bricks.children.length; i++){
-    if (bricks.children[i].alive == true){
-      count_alive ++;
-    }
-  }
-  if (count_alive == 0){
+  if (score === brickInfo.count.row * brickInfo.count.col * 10){
     alert('You Win!');
     location.reload();
   }
@@ -142,6 +136,7 @@ function ballLeaveScreen(){
 
 function ballHitPaddle(ball, paddle){
   ball.animations.play('wobble');
+  ball.body.velocity.x = -1 * 5 * (paddle.x - ball.x);
 }
 
 function startGame(){
