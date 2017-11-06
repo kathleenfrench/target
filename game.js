@@ -15,7 +15,9 @@ var ball,
     livesText,
     lifeLostText,
     playing = false,
-    startButton;
+    startButton,
+    spaceKey,
+    textSpace;
 
 // http://127.0.0.1:8080/
 
@@ -56,8 +58,16 @@ function create(){
   lifeLostText.anchor.set(0.5);
   lifeLostText.visible = false;
 
+  // start button
+
   startButton = game.add.button(game.world.width * 0.5, game.world.height * 0.5, 'button', startGame, this, 1, 0, 2);
   startButton.anchor.set(0.5);
+
+  // pause functionality 
+
+  spaceKey = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+  spaceKey.onDown.add(togglePause, this);
+
 }
 
 function update(){
@@ -143,4 +153,8 @@ function startGame(){
   startButton.destroy();
   ball.body.velocity.set(150, -150);
   playing = true;
+}
+
+function togglePause(){
+  game.physics.arcade.isPaused = (game.physics.arcade.isPaused) ? false : true;
 }
