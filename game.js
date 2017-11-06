@@ -10,7 +10,10 @@ var ball,
     newBrick,
     brickInfo,
     scoreText,
-    score = 0;
+    score = 0,
+    lives = 3,
+    livesText,
+    lifeLostText;
 
 // http://127.0.0.1:8080/
 
@@ -22,18 +25,17 @@ function preload(){
   game.scale.pageAlignHorizontally = true;
   game.scale.pageAlignVertically = true;
   game.stage.backgroundColor = '#eee';
+  game.load.spritesheet('ball', 'assets/wobble.png', 20, 20);
 }
 
 function create(){
   game.physics.startSystem(Phaser.Physics.ARCADE);
   ball = game.add.sprite(game.world.width * 0.5, game.world.height - 25, 'ball');
+  ball.animations.add('wobble', [0, 1, 0, 2, 0, 1, 0, 2, 0], 24);
   ball.anchor.set(0.5);
   game.physics.arcade.checkCollision.down = false;
   ball.checkWorldBounds = true;
-  ball.events.onOutOfBounds.add(function(){
-    alert('Game Over');
-    location.reload();
-  }, this);
+  ball.events.onOutOfBounds.add(ballLeaveScreen, this);
   paddle = game.add.sprite(game.world.width * 0.5, game.world.height - 5, 'paddle');
   paddle.anchor.set(0.5, 1);
   game.physics.enable(ball, Phaser.Physics.ARCADE);
@@ -44,11 +46,17 @@ function create(){
   paddle.body.immovable = true;
 
   initBricks();
-  scoreText = game.add.text(5, 5, 'Score: 0', { font: '18px Arial', fill: '#0095DD'});
+  textStyle = { font: '18px Arial', fill: '#0095DD'};
+  scoreText = game.add.text(5, 5, 'Score: 0', textStyle);
+  livesText = game.add.text(game.world.width - 5, 5, 'Lives: ' + lives, textStyle);
+  livesText.anchor.set(1, 0);
+  lifeLostText = game.add.text(game.world.width * 0.5, game.world.height * 0.5, 'You died. Click to continue.', textStyle);
+  lifeLostText.anchor.set(0.5);
+  lifeLostText.visible = false;
 }
 
 function update(){
-  game.physics.arcade.collide(ball, paddle);
+  game.physics.arcade.collide(ball, paddle, ballHitPaddle);
   game.physics.arcade.collide(ball, bricks, ballHitBrick);
   paddle.x = game.input.x || game.world.width * 0.5;
 }
@@ -85,6 +93,7 @@ function initBricks(){
 
 
 function ballHitBrick(ball, brick){
+  ball.animations.play('wobble');
   brick.kill();
   score += 10;
   scoreText.setText('Score: ' + score);
@@ -99,4 +108,25 @@ function ballHitBrick(ball, brick){
     alert('You Win!');
     location.reload();
   }
+}
+
+function ballLeaveScreen(){
+  lives--;
+  if (lives){
+    livesText.setText('Lives: ' + lives);
+    lifeLostText.visible = true;
+    ball.reset(game.world.width * 0.5, game.world.height - 25);
+    paddle.reset(game.world.width * 0.5, game.world.height - 5);
+    game.input.onDown.addOnce(function(){
+      lifeLostText.visible = false;
+      ball.body.velocity.set(150, -150);
+    }, this);
+  } else {
+    alert('Game Over');
+    location.reload();
+  }
+}
+
+function ballHitPaddle(ball, paddle){
+  ball.animations.play('wobble');
 }
