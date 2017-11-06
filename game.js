@@ -12,6 +12,8 @@ var ball,
     scoreText,
     score = 0;
 
+// http://127.0.0.1:8080/
+
 function preload(){
   game.load.image('ball', 'assets/ball.png');
   game.load.image('paddle', 'assets/paddle.png');
@@ -86,4 +88,15 @@ function ballHitBrick(ball, brick){
   brick.kill();
   score += 10;
   scoreText.setText('Score: ' + score);
+
+  var count_alive = 0;
+  for (i = 0; i < bricks.children.length; i++){
+    if (bricks.children[i].alive == true){
+      count_alive ++;
+    }
+  }
+  if (count_alive == 0){
+    alert('You Win!');
+    location.reload();
+  }
 }
