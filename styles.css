@@ -3,3 +3,16 @@
   margin: 0;
   background-color: #0095DD;
 }
+
+.alerts {
+  position: fixed;
+  z-index: 10000;
+  width: 40%;
+  top: 20%;
+  right: 30%;
+  left: 30%;
+  font-size: 30px;
+  text-align: center;
+  margin: 0 auto;
+  border: 10px solid black;
+}
