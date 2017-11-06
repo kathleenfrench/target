@@ -4,12 +4,16 @@ var game = new Phaser.Game(480, 320, Phaser.AUTO, null, {
   update: update
 });
 
-var ball;
-var paddle;
+var ball,
+    paddle,
+    bricks,
+    newBrick,
+    brickInfo;
 
 function preload(){
   game.load.image('ball', 'assets/ball.png');
   game.load.image('paddle', 'assets/paddle.png');
+  game.load.image('brick', 'assets/brick.png');
   game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
   game.scale.pageAlignHorizontally = true;
   game.scale.pageAlignVertically = true;
@@ -34,9 +38,41 @@ function create(){
   ball.body.bounce.set(1);
   game.physics.enable(paddle, Phaser.Physics.ARCADE);
   paddle.body.immovable = true;
+
+  initBricks();
 }
 
 function update(){
   game.physics.arcade.collide(ball, paddle);
   paddle.x = game.input.x || game.world.width * 0.5;
+}
+
+function initBricks(){
+  brickInfo = {
+    width: 50,
+    height: 20,
+    count: {
+      row: 7,
+      col: 3
+    },
+    offset: {
+      top: 50,
+      left: 60
+    },
+    padding: 10
+  };
+
+  bricks = game.add.group();
+
+  for (c = 0; c < brickInfo.count.col; c++){
+    for (r = 0; r < brickInfo.count.row; r++){
+      var brickX = (r * (brickInfo.width + brickInfo.padding)) + brickInfo.offset.left;
+      var brickY = (c * (brickInfo.height + brickInfo.padding)) + brickInfo.offset.top;
+      newBrick = game.add.sprite(brickX, brickY, 'brick');
+      game.physics.enable(newBrick, Phaser.Physics.ARCADE);
+      newBrick.body.immovable = true;
+      newBrick.anchor.set(0.5);
+      bricks.add(newBrick);
+    }
+  }
 }
